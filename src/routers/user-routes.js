@@ -31,3 +31,12 @@ router.post("/user/login", async (req, res) => {
 });
 
 module.exports = router;
+
+/*
+1. Add to Cart
+2. Remove from Cart (id and Name)
+3. WishList
+
+
+
+*/
