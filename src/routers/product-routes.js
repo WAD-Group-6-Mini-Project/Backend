@@ -5,6 +5,17 @@ const formidable = require("formidable");
 const fs = require("fs");
 const path = require('path');
 
+
+router.get("/product", async (req, res) => {
+    try {
+        const product = await Product.find({name: req.body.name});
+        res.send(product); 
+    } catch (error) {
+        console.log(error);
+        res.status(404);
+    }
+});
+
 router.post('/product', async (req, res) => {
     try {
         const form = formidable.IncomingForm();
