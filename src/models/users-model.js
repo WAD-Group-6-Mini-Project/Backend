@@ -32,6 +32,18 @@ const userSchema = new schema({
       }
     },
   },
+  mobile: {
+    type: Number,
+    required: true
+  },
+  city: {
+    type: String,
+    required: true
+  },
+  userType: {
+    type: String,
+    required: true
+  }
 });
 
 userSchema.methods.generateAuthToken = async function () {
