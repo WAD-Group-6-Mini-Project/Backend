@@ -3,6 +3,7 @@ const validator = require("validator");
 const schema = mongoose.Schema;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { ObjectId } = require("mongodb");
 
 const userSchema = new schema({
   userName: {
@@ -43,7 +44,31 @@ const userSchema = new schema({
   userType: {
     type: String,
     required: true
-  }
+  },
+  cart: [
+    {
+      product_id: {
+        type: ObjectId,
+        required: true
+      },
+      name: {
+        type: String,
+        required:true
+      }
+    }
+  ],
+  wishlist: [
+    {
+      product_id: {
+        type: ObjectId,
+        required: true
+      },
+      name: {
+        type: String,
+        required:true
+      }
+    }
+  ]
 });
 
 userSchema.methods.generateAuthToken = async function () {
