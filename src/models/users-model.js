@@ -35,55 +35,62 @@ const userSchema = new schema({
   },
   mobile: {
     type: Number,
-    required: true
+    required: true,
   },
   city: {
     type: String,
-    required: true
+    required: true,
   },
   userType: {
     type: String,
-    required: true
+    required: true,
   },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
   cart: [
     {
       product_id: {
         type: ObjectId,
-        required: true
+        required: true,
       },
       name: {
         type: String,
-        required:true
-      }
-    }
+        required: true,
+      },
+    },
   ],
   wishlist: [
     {
       product_id: {
         type: ObjectId,
-        required: true
+        required: true,
       },
       name: {
         type: String,
-        required:true
-      }
-    }
-  ]
+        required: true,
+      },
+    },
+  ],
 });
 
 userSchema.methods.generateAuthToken = async function () {
-  console.log("Hello");
   const user = this;
   const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
   user.tokens = user.tokens.concat({ token });
   await user.save();
-
   return token;
 };
 
 userSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email });
   if (!user) {
+    console.log(user);
     throw new Error("Unable to Login");
   }
   const isMatch = await bcrypt.compare(password, user.password);
