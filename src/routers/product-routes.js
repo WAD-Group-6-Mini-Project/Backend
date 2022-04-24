@@ -7,11 +7,44 @@ const path = require("path");
 
 router.get("/product", async (req, res) => {
   try {
-    const product = await Product.find({ name: req.body.name });
+    const products = await Product.find();
+    res.send(products);
+  } catch (error) {
+    console.log(error);
+    res.status(404).send("Cannot find products");
+  }
+});
+
+router.get("/product/category", async (req, res) => {
+  try {
+    if(req.body.tag){
+      const products = await Product.find({tag : req.body.tag});
+      res.send(products);
+    }
+    else if(req.body.artist){
+      const products = await Product.find({artistId : req.body.artist});
+      res.send(products);
+    }
+    else if(req.body.city){
+      const products = await Product.find({city : req.body.city});
+      res.send(products);
+    }
+    else{
+      res.redirect("/product");
+    }
+  } catch (error) {
+    res.status(404).send("Could not find products category wise");
+  }
+});
+
+router.get("/product/:id", async (req, res) => {
+  try {
+    const id = req.params.id
+    const product = await Product.findById(id);
     res.send(product);
   } catch (error) {
     console.log(error);
-    res.status(404);
+    res.status(404).send("Cannot find product");
   }
 });
 
