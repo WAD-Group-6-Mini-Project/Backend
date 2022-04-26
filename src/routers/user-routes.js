@@ -16,6 +16,7 @@ router.post("/user/signup", async (req, res) => {
 });
 
 router.post("/user/login", async (req, res) => {
+  console.log(req.body);
   try {
     const user = await User.findByCredentials(
       req.body.email,
@@ -24,6 +25,7 @@ router.post("/user/login", async (req, res) => {
     const token = await user.generateAuthToken();
     res.send({ user, token });
   } catch (e) {
+    throw e;
     res.status(400).send(e);
   }
 });
@@ -37,6 +39,16 @@ router.post("/user/cart", async (req, res) => {
   } catch (error) {
     res.status(404).send("Could not add to card");
     console.log(error);
+  }
+});
+
+router.get("/user/cart/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    res.send(user.cart);
+  } catch (error) {
+    console.log(error);
+    res.status(404).send("Could not return cart");
   }
 });
 
@@ -54,7 +66,7 @@ router.delete("/user/cart", async (req, res) => {
   }
 });
 
-router.post("user/wishlist", async (req, res) => {
+router.post("/user/wishlist", async (req, res) => {
   try {
     const product = { _id: req.body.product_id, name: req.body.name };
     await User.findByIdAndUpdate(req.body.userId, {

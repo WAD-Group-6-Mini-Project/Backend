@@ -1,11 +1,25 @@
 const express = require("express");
+const multer = require("multer");
+const sharp = require("sharp");
 const router = new express.Router();
 const Product = require("../models/product-model");
 const formidable = require("formidable");
 const fs = require("fs");
 const path = require("path");
 
-router.get("/product", async (req, res) => {
+const upload = multer({
+  limits: {
+    fileSize: 1000000,
+  },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+      return cb(new Error("Please upload an image"));
+    }
+    cb(undefined, true);
+  },
+});
+
+router.get("/products", async (req, res) => {
   try {
     const products = await Product.find();
     res.send(products);
@@ -17,19 +31,16 @@ router.get("/product", async (req, res) => {
 
 router.get("/product/category", async (req, res) => {
   try {
-    if(req.body.tag){
-      const products = await Product.find({tag : req.body.tag});
+    if (req.body.tag) {
+      const products = await Product.find({ tag: req.body.tag });
       res.send(products);
-    }
-    else if(req.body.artist){
-      const products = await Product.find({artistId : req.body.artist});
+    } else if (req.body.artist) {
+      const products = await Product.find({ artistId: req.body.artist });
       res.send(products);
-    }
-    else if(req.body.city){
-      const products = await Product.find({city : req.body.city});
+    } else if (req.body.city) {
+      const products = await Product.find({ city: req.body.city });
       res.send(products);
-    }
-    else{
+    } else {
       res.redirect("/product");
     }
   } catch (error) {
@@ -39,7 +50,7 @@ router.get("/product/category", async (req, res) => {
 
 router.get("/product/:id", async (req, res) => {
   try {
-    const id = req.params.id
+    const id = req.params.id;
     const product = await Product.findById(id);
     res.send(product);
   } catch (error) {
@@ -48,27 +59,25 @@ router.get("/product/:id", async (req, res) => {
   }
 });
 
-router.post("/product", async (req, res) => {
+router.post("/product", upload.single("productImg"), async (req, res) => {
+  const productData = JSON.parse(JSON.stringify(req.body));
+  const file = req.file;
   try {
-    const form = formidable.IncomingForm();
-    const uploadFolder = path.join(__dirname, "..", "media");
-    form.uploadDir = uploadFolder;
-    form.parse(req, async (err, fields, files) => {
-      const file = files.myFile; // myFile is the "name" attribute of the input field accepting img
-      const getImg = fs.readFileSync(
-        path.join(__dirname, "..", "media", file.newFilename)
-      );
-      const product = new Product({
-        name: req.bdoy.name,
-        tag: req.body.tag,
-        description: req.body.description,
-        price: req.body.price,
-        img: getImg,
-        artistId: req.body.id,
-      });
-      await product.save();
-      res.send("Product Saved");
-    });
+    if (!file) {
+      const error = new Error("Please upload a file");
+      error.httpStatusCode = 400;
+      throw error;
+    }
+    const buffer = await sharp(req.file.buffer)
+      .resize({ width: 250, height: 250 })
+      .png()
+      .toBuffer();
+
+    productData.img = buffer;
+    const product = new Product(productData);
+    product.save();
+
+    res.status(200).send("Product Uploaded Successfully");
   } catch (error) {
     console.log(error);
     res.status(404);

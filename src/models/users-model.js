@@ -49,7 +49,6 @@ const userSchema = new schema({
     {
       token: {
         type: String,
-        required: true,
       },
     },
   ],
@@ -57,11 +56,9 @@ const userSchema = new schema({
     {
       product_id: {
         type: ObjectId,
-        required: true,
       },
       name: {
         type: String,
-        required: true,
       },
     },
   ],
@@ -69,11 +66,9 @@ const userSchema = new schema({
     {
       product_id: {
         type: ObjectId,
-        required: true,
       },
       name: {
         type: String,
-        required: true,
       },
     },
   ],
