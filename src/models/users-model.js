@@ -63,6 +63,12 @@ const userSchema = new schema({
       img: {
         type: Buffer,
       },
+      quantity: {
+        type: Number,
+      },
+      price: {
+        type: Number,
+      },
     },
   ],
   wishlist: [
@@ -72,6 +78,9 @@ const userSchema = new schema({
       },
       name: {
         type: String,
+      },
+      img: {
+        type: Buffer,
       },
     },
   ],

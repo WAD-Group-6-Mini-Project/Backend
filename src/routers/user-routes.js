@@ -38,12 +38,22 @@ router.post("/user/cart", async (req, res) => {
       _id: 1,
       name: 1,
       img: 1,
+      price: 1,
     });
     // const user = await User.updateOne({_id: req.body.userId}, {$push: {cart:product}});
     await User.findByIdAndUpdate(req.body.userId, { $push: { cart: product } });
     res.status(200).send("Added to card successfully");
   } catch (error) {
     res.status(404).send("Could not add to card");
+    console.log(error);
+  }
+});
+
+router.post("/user/checkout/:id", async (req, res) => {
+  try {
+    await User.findByIdAndUpdate(req.params.id, { cart: req.body.cart });
+  } catch (error) {
+    res.status(404).send("Could not checkout!");
     console.log(error);
   }
 });

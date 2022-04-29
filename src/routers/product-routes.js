@@ -31,8 +31,8 @@ router.get("/products", async (req, res) => {
 
 router.get("/user/products/:id", async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
-    res.send(user.wishlist);
+    const products = await Product.find({ artistId: req.params.id });
+    res.send(products);
   } catch (error) {
     console.log(error);
     res.status(404).send("Could not return cart");
