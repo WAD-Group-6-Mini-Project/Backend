@@ -3,6 +3,7 @@ const router = new express.Router();
 const jwt = require("jsonwebtoken");
 const User = require("../models/users-model");
 const auth = require("../auth/auth");
+const mongoose = require("mongoose");
 
 router.post("/user/signup", async (req, res) => {
   const user = new User(req.body);
@@ -55,8 +56,12 @@ router.get("/user/cart/:id", async (req, res) => {
 router.delete("/user/cart", async (req, res) => {
   try {
     await User.findByIdAndUpdate(
-      req.body.userId,
-      { $pull: { cart: { product_id: req.body.product_id } } },
+      mongoose.Types.ObjectId(req.body.userId),
+      {
+        $pull: {
+          cart: { _id: mongoose.Types.ObjectId(req.body.product_id) },
+        },
+      },
       { safe: true, multi: false }
     );
     res.status(200).send("Deleted from cart successfully");
