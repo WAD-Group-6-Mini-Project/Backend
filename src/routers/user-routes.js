@@ -88,7 +88,11 @@ router.delete("/user/cart", async (req, res) => {
 
 router.post("/user/wishlist", async (req, res) => {
   try {
-    const product = { product_id: req.body.product_id, name: req.body.name };
+    const product = await Product.findById(req.body.product_id, {
+      _id: 1,
+      name: 1,
+      img: 1,
+    });
     await User.findByIdAndUpdate(req.body.userId, {
       $push: { wishlist: product },
     });
