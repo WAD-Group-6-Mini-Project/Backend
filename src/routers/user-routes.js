@@ -2,6 +2,7 @@ const express = require("express");
 const router = new express.Router();
 const jwt = require("jsonwebtoken");
 const User = require("../models/users-model");
+const Product = require("../models/product-model");
 const auth = require("../auth/auth");
 const mongoose = require("mongoose");
 
@@ -33,7 +34,11 @@ router.post("/user/login", async (req, res) => {
 
 router.post("/user/cart", async (req, res) => {
   try {
-    const product = { _id: req.body.product_id, name: req.body.name };
+    const product = await Product.findById(req.body.product_id, {
+      _id: 1,
+      name: 1,
+      img: 1,
+    });
     // const user = await User.updateOne({_id: req.body.userId}, {$push: {cart:product}});
     await User.findByIdAndUpdate(req.body.userId, { $push: { cart: product } });
     res.status(200).send("Added to card successfully");

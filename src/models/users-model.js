@@ -54,11 +54,14 @@ const userSchema = new schema({
   ],
   cart: [
     {
-      product_id: {
+      _id: {
         type: ObjectId,
       },
       name: {
         type: String,
+      },
+      img: {
+        type: Buffer,
       },
     },
   ],
