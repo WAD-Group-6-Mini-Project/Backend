@@ -33,7 +33,7 @@ router.post("/user/login", async (req, res) => {
 
 router.post("/user/cart", async (req, res) => {
   try {
-    const product = { _id: req.body.product_id, name: req.body.name };
+    const product = { product_id: req.body.product_id, name: req.body.name };
     // const user = await User.updateOne({_id: req.body.userId}, {$push: {cart:product}});
     await User.findByIdAndUpdate(req.body.userId, { $push: { cart: product } });
     res.status(200).send("Added to card successfully");
@@ -59,7 +59,7 @@ router.delete("/user/cart", async (req, res) => {
       mongoose.Types.ObjectId(req.body.userId),
       {
         $pull: {
-          cart: { _id: mongoose.Types.ObjectId(req.body.product_id) },
+          cart: { product_id: mongoose.Types.ObjectId(req.body.product_id) },
         },
       },
       { safe: true, multi: false }
@@ -73,7 +73,7 @@ router.delete("/user/cart", async (req, res) => {
 
 router.post("/user/wishlist", async (req, res) => {
   try {
-    const product = { _id: req.body.product_id, name: req.body.name };
+    const product = { product_id: req.body.product_id, name: req.body.name };
     await User.findByIdAndUpdate(req.body.userId, {
       $push: { wishlist: product },
     });
