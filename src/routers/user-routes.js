@@ -53,6 +53,16 @@ router.get("/user/cart/:id", async (req, res) => {
   }
 });
 
+router.get("/user/wishlist/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    res.send(user.wishlist);
+  } catch (error) {
+    console.log(error);
+    res.status(404).send("Could not return cart");
+  }
+});
+
 router.delete("/user/cart", async (req, res) => {
   try {
     await User.findByIdAndUpdate(

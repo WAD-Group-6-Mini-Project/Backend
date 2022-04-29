@@ -29,6 +29,16 @@ router.get("/products", async (req, res) => {
   }
 });
 
+router.get("/user/products/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    res.send(user.wishlist);
+  } catch (error) {
+    console.log(error);
+    res.status(404).send("Could not return cart");
+  }
+});
+
 router.get("/product/category", async (req, res) => {
   try {
     if (req.body.tag) {
