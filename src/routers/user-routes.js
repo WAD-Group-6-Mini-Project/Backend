@@ -49,9 +49,22 @@ router.post("/user/cart", async (req, res) => {
   }
 });
 
+router.post("/user/confirm/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    console.log(user);
+    user.cart = [];
+    await user.save();
+    res.send(200);
+  } catch (e) {
+    res.status(404).send("Purchase could not be completed!");
+  }
+});
+
 router.post("/user/checkout/:id", async (req, res) => {
   try {
     await User.findByIdAndUpdate(req.params.id, { cart: req.body.cart });
+    res.send(200);
   } catch (error) {
     res.status(404).send("Could not checkout!");
     console.log(error);
