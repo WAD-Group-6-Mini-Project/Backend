@@ -27,10 +27,6 @@ const productSchema = new schema({
     type: ObjectId,
     required: true,
   },
-  artistName: {
-    type: String,
-    required: true,
-  },
 });
 
 const Product = mongoose.model("product", productSchema);
