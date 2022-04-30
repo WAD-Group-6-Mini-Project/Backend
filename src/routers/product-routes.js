@@ -39,7 +39,17 @@ router.get("/user/products/:id", async (req, res) => {
   }
 });
 
-router.get("/product/category", async (req, res) => {
+router.get("/product/tags", async (req, res) => {
+  try {
+    const result = await Product.find().distinct("tag");
+    res.send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(404).send(error);
+  }
+});
+
+router.post("/product/category", async (req, res) => {
   try {
     if (req.body.tag) {
       const products = await Product.find({ tag: req.body.tag });

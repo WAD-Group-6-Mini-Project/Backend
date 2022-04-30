@@ -18,7 +18,6 @@ router.post("/user/signup", async (req, res) => {
 });
 
 router.post("/user/login", async (req, res) => {
-  console.log(req.body);
   try {
     const user = await User.findByCredentials(
       req.body.email,
@@ -81,6 +80,23 @@ router.get("/user/cart/:id", async (req, res) => {
   }
 });
 
+router.post("/user/artists", async (req, res) => {
+  try {
+    const limit = parseInt(req.body.limit);
+    const result = await User.find(
+      { userType: "Artist" },
+      {
+        _id: 1,
+        userName: 1,
+      }
+    ).limit(limit);
+    res.send(result);
+  } catch (error) {
+    console.log(error);
+    res.status(404).send(error);
+  }
+});
+
 router.get("/user/wishlist/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -140,13 +156,21 @@ router.delete("user/wishlist", async (req, res) => {
   }
 });
 
+router.post("/logout", async (req, res) => {
+  try {
+    const user = await User.findById(req.body._id);
+    user.tokens = [];
+    user.save();
+    res.send();
+  } catch {
+    res.status(404).send("Error");
+  }
+});
+
 module.exports = router;
 
 /*
 1. Add to Cart
 2. Remove from Cart (id and Name)
 3. WishList
-
-
-
 */
