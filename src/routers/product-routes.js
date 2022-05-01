@@ -31,7 +31,7 @@ router.get("/products", async (req, res) => {
 
 router.get("/user/products/:id", async (req, res) => {
   try {
-    const products = await Product.find({ artistId: req.params.id });
+    const products = await Product.find({ "artist._id": req.body.artist });
     res.send(products);
   } catch (error) {
     console.log(error);
