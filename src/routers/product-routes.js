@@ -55,7 +55,7 @@ router.post("/product/category", async (req, res) => {
       const products = await Product.find({ tag: req.body.tag });
       res.send(products);
     } else if (req.body.artist) {
-      const products = await Product.find({ artistId: req.body.artist });
+      const products = await Product.find({ "artist._id": req.body.artist });
       res.send(products);
     } else if (req.body.city) {
       const products = await Product.find({ city: req.body.city });
@@ -81,6 +81,7 @@ router.get("/product/:id", async (req, res) => {
 
 router.post("/product", upload.single("productImg"), async (req, res) => {
   const productData = JSON.parse(JSON.stringify(req.body));
+  productData.artist = JSON.parse(productData.artist);
   const file = req.file;
   try {
     if (!file) {
