@@ -125,6 +125,16 @@ router.delete("/user/cart", async (req, res) => {
   }
 });
 
+router.get("/cart-count/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    res.send(user.cart.length);
+  } catch (e) {
+    console.log(e);
+    res.status(404).send("Could not process request");
+  }
+});
+
 router.post("/user/wishlist", async (req, res) => {
   try {
     const product = await Product.findById(req.body.product_id, {
