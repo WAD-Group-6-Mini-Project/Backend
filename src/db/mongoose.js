@@ -1,6 +1,3 @@
-/*   File contains mongodb connection */
-
-//import mongoose package
 const mongoose = require("mongoose");
 
 (async () => {
