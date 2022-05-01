@@ -23,9 +23,15 @@ const productSchema = new schema({
     type: Buffer,
     required: true,
   },
-  artistId: {
-    type: ObjectId,
-    required: true,
+  artist: {
+    _id: {
+      type: ObjectId,
+      required: true,
+    },
+    userName: {
+      type: String,
+      required: true,
+    },
   },
 });
 
