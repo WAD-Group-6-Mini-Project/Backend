@@ -5,6 +5,7 @@ const router = new express.Router();
 const Product = require("../models/product-model");
 const formidable = require("formidable");
 const fs = require("fs");
+const mongoose = require("mongoose");
 const path = require("path");
 
 const upload = multer({
@@ -31,7 +32,9 @@ router.get("/products", async (req, res) => {
 
 router.get("/user/products/:id", async (req, res) => {
   try {
-    const products = await Product.find({ "artist._id": req.params.id });
+    const products = await Product.find({
+      "artist._id": mongoose.Types.ObjectId(req.params.id),
+    });
     res.send(products);
   } catch (error) {
     console.log(error);
