@@ -5,6 +5,7 @@ const User = require("../models/users-model");
 const Product = require("../models/product-model");
 const auth = require("../auth/auth");
 const mongoose = require("mongoose");
+const { type } = require("express/lib/response");
 
 router.post("/user/signup", async (req, res) => {
   const user = new User(req.body);
@@ -128,7 +129,8 @@ router.delete("/user/cart", async (req, res) => {
 router.get("/cart-count/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    res.send(user.cart.length);
+    var cart = user.cart;
+    res.send({ cart: cart.length });
   } catch (e) {
     console.log(e);
     res.status(404).send("Could not process request");
